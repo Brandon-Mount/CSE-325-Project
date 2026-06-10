@@ -9,6 +9,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddSingleton<RecipeService>();
 builder.Services.AddSingleton<MealPlanService>();
+builder.Services.AddSingleton<GroceryListService>();
 
 var app = builder.Build();
 

@@ -24,10 +24,6 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/bmoun/OneDrive/Desktop/CSE 325 Project/CSE-325-Project/RecipeMealPlanner/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/bmoun/OneDrive/Desktop/CSE 325 Project/CSE-325-Project/RecipeMealPlanner/Components/Pages/CreateRecipe.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDcmVhdGVSZWNpcGUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -58,10 +54,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/bmoun/OneDrive/Desktop/CSE 325 Project/CSE-325-Project/RecipeMealPlanner/Components/Pages/Recipes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xSZWNpcGVzLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/bmoun/OneDrive/Desktop/CSE 325 Project/CSE-325-Project/RecipeMealPlanner/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/bmoun/OneDrive/Desktop/CSE 325 Project/CSE-325-Project/RecipeMealPlanner/Components/Routes.razor]

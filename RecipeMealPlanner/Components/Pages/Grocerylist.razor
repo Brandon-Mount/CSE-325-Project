@@ -1,0 +1,95 @@
+@page "/grocerylist"
+
+@using RecipeMealPlanner.Models
+@using RecipeMealPlanner.Services
+
+@inject GroceryListService GroceryListService
+
+<h3>Grocery List</h3>
+
+<div class="mb-3">
+    <input class="form-control"
+           @bind="newItem"
+           placeholder="Add grocery item" />
+
+    <br />
+
+    <button class="btn btn-primary"
+            @onclick="AddItem">
+        Add Item
+    </button>
+</div>
+
+@if (items.Count == 0)
+{
+    <p>No grocery items added.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Purchased</th>
+                <th>Item</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in items)
+            {
+                <tr>
+                    <td>
+                        <input type="checkbox"
+                               checked="@item.IsPurchased"
+                               @onchange="() => TogglePurchased(item.Id)" />
+                    </td>
+
+                    <td>@item.Name</td>
+
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                @onclick="() => DeleteItem(item.Id)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private string newItem = "";
+
+    private List<GroceryItem> items = new();
+
+    protected override void OnInitialized()
+    {
+        items = GroceryListService.GetItems();
+    }
+
+    private void AddItem()
+    {
+        GroceryListService.AddItem(newItem);
+
+        newItem = "";
+
+        items = GroceryListService.GetItems();
+    }
+
+    private void TogglePurchased(int id)
+    {
+        GroceryListService.TogglePurchased(id);
+
+        items = GroceryListService.GetItems();
+    }
+
+    private void DeleteItem(int id)
+    {
+        GroceryListService.DeleteItem(id);
+
+        items = GroceryListService.GetItems();
+    }
+}
