@@ -1,0 +1,57 @@
+@page "/recipes"
+@using RecipeMealPlanner.Models
+@using RecipeMealPlanner.Services
+@inject RecipeService RecipeService
+
+<h3>Recipes</h3>
+
+<p>
+    <a href="/createrecipe">Create New Recipe</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Prep Time</th>
+            <th>Cook Time</th>
+            <th>Servings</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var recipe in recipes)
+        {
+            <tr>
+                <td>@recipe.Name</td>
+                <td>@recipe.Category</td>
+                <td>@recipe.PrepTimeMinutes min</td>
+                <td>@recipe.CookTimeMinutes min</td>
+                <td>@recipe.Servings</td>
+                <td>
+                    <a href="/editrecipe/@recipe.Id">Edit</a>
+                    |
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteRecipe(recipe.Id)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Recipe> recipes = new();
+
+    protected override void OnInitialized()
+    {
+        recipes = RecipeService.GetRecipes();
+    }
+
+    private void DeleteRecipe(int id)
+    {
+        RecipeService.DeleteRecipe(id);
+        recipes = RecipeService.GetRecipes();
+    }
+}

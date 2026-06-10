@@ -1,0 +1,123 @@
+@page "/mealplanner"
+@using RecipeMealPlanner.Models
+@using RecipeMealPlanner.Services
+@inject RecipeService RecipeService
+@inject MealPlanService MealPlanService
+
+<h3>Meal Planner</h3>
+
+<EditForm Model="newMealPlan" OnValidSubmit="AddMealPlan">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Meal Date</label>
+        <InputDate class="form-control" @bind-Value="newMealPlan.MealDate" />
+    </div>
+
+    <div class="mb-3">
+        <label>Meal Type</label>
+        <InputSelect class="form-control" @bind-Value="newMealPlan.MealType">
+            <option value="">Select meal type</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label>Recipe</label>
+        <InputSelect class="form-control" @bind-Value="selectedRecipeId">
+            <option value="0">Select recipe</option>
+            @foreach (var recipe in recipes)
+            {
+                <option value="@recipe.Id">@recipe.Name</option>
+            }
+        </InputSelect>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Meal</button>
+</EditForm>
+
+<hr />
+
+<h4>Planned Meals</h4>
+
+@if (mealPlans.Count == 0)
+{
+    <p>No meals have been planned yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Meal Type</th>
+                <th>Recipe</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var meal in mealPlans)
+            {
+                <tr>
+                    <td>@meal.MealDate.ToShortDateString()</td>
+                    <td>@meal.MealType</td>
+                    <td>@meal.RecipeName</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteMealPlan(meal.Id)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Recipe> recipes = new();
+    private List<MealPlan> mealPlans = new();
+
+    private MealPlan newMealPlan = new()
+    {
+        MealDate = DateTime.Today
+    };
+
+    private int selectedRecipeId;
+
+    protected override void OnInitialized()
+    {
+        recipes = RecipeService.GetRecipes();
+        mealPlans = MealPlanService.GetMealPlans();
+    }
+
+    private void AddMealPlan()
+    {
+        var selectedRecipe = recipes.FirstOrDefault(r => r.Id == selectedRecipeId);
+
+        if (selectedRecipe is null)
+        {
+            return;
+        }
+
+        newMealPlan.RecipeId = selectedRecipe.Id;
+        newMealPlan.RecipeName = selectedRecipe.Name;
+
+        MealPlanService.AddMealPlan(newMealPlan);
+
+        newMealPlan = new MealPlan
+        {
+            MealDate = DateTime.Today
+        };
+
+        selectedRecipeId = 0;
+        mealPlans = MealPlanService.GetMealPlans();
+    }
+
+    private void DeleteMealPlan(int id)
+    {
+        MealPlanService.DeleteMealPlan(id);
+        mealPlans = MealPlanService.GetMealPlans();
+    }
+}

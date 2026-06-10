@@ -1,0 +1,93 @@
+@page "/editrecipe/{Id:int}"
+@using RecipeMealPlanner.Models
+@using RecipeMealPlanner.Services
+@inject RecipeService RecipeService
+@inject NavigationManager Navigation
+
+<h3>Edit Recipe</h3>
+
+@if (recipe is null)
+{
+    <p>Recipe not found.</p>
+}
+else
+{
+    <EditForm Model="recipe" OnValidSubmit="SaveRecipe">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Name</label>
+            <InputText class="form-control" @bind-Value="recipe.Name" />
+        </div>
+
+        <div class="mb-3">
+            <label>Category</label>
+            <InputText class="form-control" @bind-Value="recipe.Category" />
+        </div>
+
+        <div class="mb-3">
+            <label>Ingredients</label>
+            <InputTextArea class="form-control" @bind-Value="recipe.Ingredients" />
+        </div>
+
+        <div class="mb-3">
+            <label>Instructions</label>
+            <InputTextArea class="form-control" @bind-Value="recipe.Instructions" />
+        </div>
+
+        <div class="mb-3">
+            <label>Prep Time Minutes</label>
+            <InputNumber class="form-control" @bind-Value="recipe.PrepTimeMinutes" />
+        </div>
+
+        <div class="mb-3">
+            <label>Cook Time Minutes</label>
+            <InputNumber class="form-control" @bind-Value="recipe.CookTimeMinutes" />
+        </div>
+
+        <div class="mb-3">
+            <label>Servings</label>
+            <InputNumber class="form-control" @bind-Value="recipe.Servings" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a class="btn btn-secondary" href="/recipes">Cancel</a>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Recipe? recipe;
+
+    protected override void OnInitialized()
+    {
+        var existingRecipe = RecipeService.GetRecipeById(Id);
+
+        if (existingRecipe is not null)
+        {
+            recipe = new Recipe
+            {
+                Id = existingRecipe.Id,
+                Name = existingRecipe.Name,
+                Category = existingRecipe.Category,
+                Ingredients = existingRecipe.Ingredients,
+                Instructions = existingRecipe.Instructions,
+                PrepTimeMinutes = existingRecipe.PrepTimeMinutes,
+                CookTimeMinutes = existingRecipe.CookTimeMinutes,
+                Servings = existingRecipe.Servings
+            };
+        }
+    }
+
+    private void SaveRecipe()
+    {
+        if (recipe is not null)
+        {
+            RecipeService.UpdateRecipe(recipe);
+            Navigation.NavigateTo("/recipes");
+        }
+    }
+}
