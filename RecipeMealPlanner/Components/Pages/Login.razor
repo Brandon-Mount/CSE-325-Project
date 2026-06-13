@@ -1,0 +1,43 @@
+@page "/login"
+@rendermode InteractiveServer
+
+@using RecipeMealPlanner.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager Navigation
+
+<h3>Login</h3>
+
+<div class="mb-3">
+    <label>Username</label>
+    <input class="form-control" @bind="username" />
+</div>
+
+<div class="mb-3">
+    <label>Password</label>
+    <input class="form-control" type="password" @bind="password" />
+</div>
+
+<button class="btn btn-primary" @onclick="LoginUser">Login</button>
+
+<p class="text-danger">@errorMessage</p>
+
+@code {
+    private string username = "";
+    private string password = "";
+    private string errorMessage = "";
+
+    private void LoginUser()
+    {
+        if (username == "admin" && password == "password")
+        {
+            ((SimpleAuthStateProvider)AuthProvider).Login(username);
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Invalid username or password.";
+        }
+    }
+}

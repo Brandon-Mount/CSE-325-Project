@@ -1,0 +1,23 @@
+@page "/logout"
+@rendermode InteractiveServer
+
+@using RecipeMealPlanner.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager Navigation
+
+<h3>Logout</h3>
+
+<p>You have been logged out.</p>
+
+<p>
+    <a href="/login">Go to Login</a>
+</p>
+
+@code {
+    protected override void OnInitialized()
+    {
+        ((SimpleAuthStateProvider)AuthProvider).Logout();
+    }
+}

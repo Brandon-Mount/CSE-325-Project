@@ -1,5 +1,6 @@
 using RecipeMealPlanner.Components;
 using RecipeMealPlanner.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,11 @@ builder.Services.AddRazorComponents()
 builder.Services.AddSingleton<RecipeService>();
 builder.Services.AddSingleton<MealPlanService>();
 builder.Services.AddSingleton<GroceryListService>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddScoped<UserSession>();
+builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthStateProvider>();
 
 var app = builder.Build();
 
