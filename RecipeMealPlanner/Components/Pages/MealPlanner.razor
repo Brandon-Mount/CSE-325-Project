@@ -1,43 +1,40 @@
 @page "/mealplanner"
+@rendermode InteractiveServer
+
 @using RecipeMealPlanner.Models
 @using RecipeMealPlanner.Services
-@rendermode InteractiveServer
 @inject RecipeService RecipeService
 @inject MealPlanService MealPlanService
 
 <h3>Meal Planner</h3>
 
-<EditForm Model="newMealPlan" OnValidSubmit="AddMealPlan">
-    <DataAnnotationsValidator />
+<div class="mb-3">
+    <label>Meal Date</label>
+    <InputDate class="form-control" @bind-Value="newMealPlan.MealDate" />
+</div>
 
-    <div class="mb-3">
-        <label>Meal Date</label>
-        <InputDate class="form-control" @bind-Value="newMealPlan.MealDate" />
-    </div>
+<div class="mb-3">
+    <label>Meal Type</label>
+    <select class="form-control" @bind="newMealPlan.MealType">
+        <option value="">Select meal type</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+    </select>
+</div>
 
-    <div class="mb-3">
-        <label>Meal Type</label>
-        <InputSelect class="form-control" @bind-Value="newMealPlan.MealType">
-            <option value="">Select meal type</option>
-            <option value="Breakfast">Breakfast</option>
-            <option value="Lunch">Lunch</option>
-            <option value="Dinner">Dinner</option>
-        </InputSelect>
-    </div>
+<div class="mb-3">
+    <label>Recipe</label>
+    <select class="form-control" @bind="selectedRecipeId">
+        <option value="0">Select recipe</option>
+        @foreach (var recipe in recipes)
+        {
+            <option value="@recipe.Id">@recipe.Name</option>
+        }
+    </select>
+</div>
 
-    <div class="mb-3">
-        <label>Recipe</label>
-        <InputSelect class="form-control" @bind-Value="selectedRecipeId">
-            <option value="0">Select recipe</option>
-            @foreach (var recipe in recipes)
-            {
-                <option value="@recipe.Id">@recipe.Name</option>
-            }
-        </InputSelect>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Add Meal</button>
-</EditForm>
+<button class="btn btn-primary" @onclick="AddMealPlan">Add Meal</button>
 
 <hr />
 
@@ -85,7 +82,7 @@ else
         MealDate = DateTime.Today
     };
 
-    private int selectedRecipeId;
+    private int selectedRecipeId = 0;
 
     protected override void OnInitialized()
     {
@@ -97,15 +94,20 @@ else
     {
         var selectedRecipe = recipes.FirstOrDefault(r => r.Id == selectedRecipeId);
 
-        if (selectedRecipe is null)
+        if (selectedRecipe is null || string.IsNullOrWhiteSpace(newMealPlan.MealType))
         {
             return;
         }
 
-        newMealPlan.RecipeId = selectedRecipe.Id;
-        newMealPlan.RecipeName = selectedRecipe.Name;
+        var mealPlan = new MealPlan
+        {
+            MealDate = newMealPlan.MealDate,
+            MealType = newMealPlan.MealType,
+            RecipeId = selectedRecipe.Id,
+            RecipeName = selectedRecipe.Name
+        };
 
-        MealPlanService.AddMealPlan(newMealPlan);
+        MealPlanService.AddMealPlan(mealPlan);
 
         newMealPlan = new MealPlan
         {
